@@ -55,10 +55,6 @@ class MyNewCdkAppStack(cdk.Stack):
         # Attach the capacity provider to the ECS cluster
         cluster.add_asg_capacity_provider(capacity_provider)
 
-        # Reference the ECR repository by its name and tag
-        repository = ecr.Repository.from_repository_name(self, "MyECRRepo",
-            repository_name="cdk-hnb659fds-container-assets-146580983502-us-east-1"
-        )
 
         # Create the IAM role for ECS task execution
         execution_role = iam.Role(self, "EcsTaskExecutionRole",
@@ -72,8 +68,8 @@ class MyNewCdkAppStack(cdk.Stack):
         )
 
         container = task_definition.add_container("MyContainer",
-            image=ecs.ContainerImage.from_ecr_repository(repository, tag="latest"),
-            memory_limit_mib=512
+            image=ecs.ContainerImage.from_registry("nginx:latest"),
+            memory_limit_mib=2048
         )
 
         container.add_port_mappings(
